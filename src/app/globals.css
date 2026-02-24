@@ -1,0 +1,67 @@
+/* Tailwind base layers — these must be first */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles applied to the whole document */
+@layer base {
+  html {
+    /* Smooth scroll for anchor links (e.g. clicking "Work" in the nav) */
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: theme('colors.background');
+    color: theme('colors.foreground');
+    font-family: theme('fontFamily.sans');
+    /* Slightly relaxed line height for readability */
+    line-height: 1.6;
+    /* Prevent text from being too sharp on high-DPI screens */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Remove default focus outline in favor of a cleaner custom one */
+  :focus-visible {
+    outline: 2px solid theme('colors.foreground');
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* Utility: gentle fade-in for hero content on page load */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out both;
+  }
+
+  .animate-fade-in-slow {
+    animation: fadeIn 1.2s ease-out 0.2s both;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Shake animation — used on incorrect password entry */
+@layer utilities {
+  .animate-shake {
+    animation: shake 0.45s ease-in-out;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
