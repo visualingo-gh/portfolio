@@ -34,28 +34,29 @@ export function LockedCard({ href, children, className = '', protected: isProtec
     )
   }
 
-  // Locked — blur the card contents and intercept clicks
+  // Locked — show the card in its normal layout, then blur via overlay
   return (
     <>
-      {/* Outer wrapper — carries all the card's visual styles (border, rounded corners,
-          overflow-hidden, background). The overflow-hidden here is what clips the blur
-          to the card boundary so it doesn't bleed outside. */}
+      {/* Outer wrapper — carries the card's visual styles AND acts as the positioning
+          context. Children render directly here so flex layout (image + text columns)
+          is identical to the unlocked state. */}
       <div
         className={`relative cursor-pointer ${className}`}
         onClick={() => setModalOpen(true)}
         role="button"
         aria-label="View protected work — click to unlock"
       >
-        {/* Inner blur wrapper — only wraps the content, not the card shell.
-            Because overflow-hidden on the outer element clips this, the blur
-            stops cleanly at the card edge instead of bleeding into adjacent cards. */}
-        <div className="blur-md select-none pointer-events-none">
-          {children}
-        </div>
+        {/* Card content — rendered directly as flex children, no wrapper div.
+            This keeps the horizontal image/text layout intact. */}
+        {children}
 
-        {/* Lock overlay — sibling of the blurred div, not a child of it.
-            Because it lives outside the blurred element, it renders sharp. */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-2xl bg-white/20">
+        {/* Frosted overlay — uses backdrop-blur instead of filter: blur on the content.
+            backdrop-blur blurs what's BEHIND this element (the card content) without
+            touching the card's border or layout. The blur is naturally contained to
+            inset-0, so it never bleeds outside the card boundary.
+            The lock icon sits inside this overlay and renders sharp because
+            backdrop-filter only affects what's behind, not what's within. */}
+        <div className="absolute inset-0 backdrop-blur-md bg-white/30 flex flex-col items-center justify-center gap-3 rounded-2xl">
           {/* Lock icon */}
           <div className="w-10 h-10 rounded-full bg-foreground/90 flex items-center justify-center shadow-lg">
             <svg
