@@ -9,7 +9,7 @@
 
 import imageUrlBuilder from '@sanity/image-url'
 import { client } from './client'
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
 
 // Create the URL builder, wired to our project
 const builder = imageUrlBuilder(client)
