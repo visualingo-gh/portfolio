@@ -1,12 +1,38 @@
 // About — A brief teaser that lives on the homepage.
-// NOT the full bio — just enough to intrigue and send people to /about.
-// Two columns: a short paragraph on the left, a few highlights on the right.
+// NOT the full bio — just enough to intrigue and send people to contact.
+// Two columns: bio on the left, highlights on the right.
+//
+// All content comes from Sanity — edit at /studio → Site Settings → About Section.
 
-export function About() {
-  // Skills/highlights shown in the right column — easy to update here
+import { PortableText } from '@portabletext/react'
+import type { SiteSettings } from '@/sanity/queries'
+
+interface AboutProps {
+  settings: SiteSettings | null
+}
+
+// Controls how Portable Text bio paragraphs are rendered.
+// Matches the existing typography style of the About section.
+const bioComponents = {
+  block: {
+    normal: ({ children }: { children?: React.ReactNode }) => (
+      <p className="text-white/60 text-base md:text-lg leading-relaxed mb-6">
+        {children}
+      </p>
+    ),
+  },
+}
+
+export function About({ settings }: AboutProps) {
+  // Fall back to defaults if Sanity hasn't been seeded yet
+  const headline        = settings?.aboutHeadline    ?? 'I design with both craft\nand context in mind.'
+  const bio             = settings?.aboutBio
+  const specializations = settings?.specializations  ?? ['Enterprise UX', 'Streaming & TV', 'Mobile', 'Design Leadership']
+  const industries      = settings?.industries       ?? ['Energy & Utilities', 'Media & Entertainment', 'B2B SaaS', 'Marketing & Brand']
+
   const highlights = [
-    { label: 'Specializations', items: ['Enterprise UX', 'Streaming & TV', 'Mobile', 'Design Leadership'] },
-    { label: 'Industries', items: ['Energy & Utilities', 'Media & Entertainment', 'B2B SaaS', 'Marketing & Brand'] },
+    { label: 'Specializations', items: specializations },
+    { label: 'Industries',      items: industries      },
   ]
 
   return (
@@ -29,25 +55,30 @@ export function About() {
 
           {/* Left — bio text */}
           <div>
-            <h2 className="font-serif text-3xl md:text-4xl text-white tracking-display mb-8 leading-snug">
-              I design with both craft
-              <br />
-              and context in mind.
+            {/* whitespace-pre-line respects \n line breaks entered in the Studio */}
+            <h2 className="font-serif text-3xl md:text-4xl text-white tracking-display mb-8 leading-snug whitespace-pre-line">
+              {headline}
             </h2>
 
-            {/* Bio paragraph — update this with your real bio */}
-            {/* Replace the text below with 2–3 sentences about yourself */}
-            <p className="text-white/60 text-base md:text-lg leading-relaxed mb-6">
-              I&apos;m a Senior Product Designer with over a decade of experience
-              spanning enterprise software, streaming TV, and mobile. My background
-              in design management means I think about systems, teams, and outcomes
-              — not just screens.
-            </p>
-            <p className="text-white/60 text-base md:text-lg leading-relaxed mb-10">
-              I&apos;ve led design for products used by millions, built and mentored
-              design teams, and partnered closely with engineering and product to
-              ship work that actually moves the needle.
-            </p>
+            {/* Bio — rendered as Portable Text if Sanity content exists */}
+            {bio && bio.length > 0 ? (
+              <PortableText value={bio} components={bioComponents} />
+            ) : (
+              // Fallback shown before Sanity is seeded
+              <>
+                <p className="text-white/60 text-base md:text-lg leading-relaxed mb-6">
+                  I&apos;m a Senior Product Designer with over a decade of experience
+                  spanning enterprise software, streaming TV, and mobile. My background
+                  in design management means I think about systems, teams, and outcomes
+                  — not just screens.
+                </p>
+                <p className="text-white/60 text-base md:text-lg leading-relaxed mb-10">
+                  I&apos;ve led design for products used by millions, built and mentored
+                  design teams, and partnered closely with engineering and product to
+                  ship work that actually moves the needle.
+                </p>
+              </>
+            )}
 
             <a
               href="#contact"

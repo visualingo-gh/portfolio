@@ -1,31 +1,36 @@
 // All Work page — /work
 //
 // Shows every project in the portfolio as a grid of cards.
-// Projects are pulled from /src/data/projects.ts — add or reorder them there.
-// Featured projects appear first, then the rest in the order they're listed.
+// Projects are pulled from Sanity — add, edit, or reorder them at /studio.
+// Featured projects appear first, then the rest in chronological order.
 
 import Image from 'next/image'
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { Nav } from '@/components/Nav'
+import { NavWrapper } from '@/components/NavWrapper'
 import { LockedCard } from '@/components/LockedCard'
-import { projects, type Project } from '@/data/projects'
+import { urlFor } from '@/sanity/image'
+import { getCachedAllProjects } from '@/sanity/queries'
+import type { SanityProject } from '@/sanity/queries'
 
 export const metadata: Metadata = {
   title: 'Work — Curtis Calhoun',
   description: 'All case studies and portfolio projects by Curtis Calhoun, Senior Product Designer.',
 }
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  // Fetch all projects from Sanity
+  const allProjects = await getCachedAllProjects()
+
   // Show featured projects first, then the rest — preserves order within each group
   const sorted = [
-    ...projects.filter((p) => p.featured),
-    ...projects.filter((p) => !p.featured),
+    ...allProjects.filter((p) => p.featured),
+    ...allProjects.filter((p) => !p.featured),
   ]
 
   return (
     <>
-      <Nav />
+      <NavWrapper />
 
       <main className="bg-background min-h-screen">
 
@@ -43,7 +48,7 @@ export default function WorkPage() {
             </Link>
 
             <p className="text-xs text-white/40 uppercase tracking-widest mb-4">
-              {projects.length} projects
+              {allProjects.length} projects
             </p>
             <h1 className="font-serif text-5xl md:text-7xl text-white tracking-display leading-none">
               All Work
@@ -55,7 +60,7 @@ export default function WorkPage() {
         <div className="max-w-screen-xl mx-auto px-6 md:px-12 py-16 md:py-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sorted.map((project) => (
-              <WorkCard key={project.id} project={project} />
+              <WorkCard key={project._id} project={project} />
             ))}
           </div>
         </div>
@@ -68,23 +73,24 @@ export default function WorkPage() {
 // ── WorkCard ──────────────────────────────────────────────────
 // Compact card used in the grid — image on top, info below.
 
-function WorkCard({ project }: { project: Project }) {
+function WorkCard({ project }: { project: SanityProject }) {
   return (
     <LockedCard
-      href={`/work/${project.id}`}
+      href={`/work/${project.slug}`}
       className="group flex flex-col rounded-2xl overflow-hidden border border-border hover:border-stone-300 bg-white transition-all duration-400"
     >
       {/* Image area */}
       <div className="relative aspect-[4/3] bg-stone-100 overflow-hidden">
-        {project.imageSrc ? (
+        {project.image ? (
           <Image
-            src={project.imageSrc}
-            alt={project.imageAlt ?? project.title}
+            src={urlFor(project.image).width(740).height(555).auto('format').url()}
+            alt={project.image.alt ?? project.title}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover object-center group-hover:scale-[1.03] transition-transform duration-400"
           />
         ) : (
-          // Fallback if no image — shouldn't happen but good to have
+          // Fallback gradient if the project has no image yet
           <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200" />
         )}
 

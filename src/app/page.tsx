@@ -1,32 +1,39 @@
 // Homepage — assembles all the sections in order.
-// Each section is its own component — edit them individually in /src/components/.
-// The layout order here (Nav → Hero → Work → About → Footer) reflects the page flow.
+// Fetches content from Sanity and passes it down to each section as props.
+// Edit everything at curtiscalhoun.com/studio — no code changes needed.
 
-import { Nav } from '@/components/Nav'
+import { NavWrapper } from '@/components/NavWrapper'
 import { Hero } from '@/components/Hero'
 import { Work } from '@/components/Work'
 import { About } from '@/components/About'
 import { Footer } from '@/components/Footer'
+import { getCachedSiteSettings, getCachedFeaturedProjects } from '@/sanity/queries'
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch both settings and featured projects in parallel for speed
+  const [settings, featuredProjects] = await Promise.all([
+    getCachedSiteSettings(),
+    getCachedFeaturedProjects(),
+  ])
+
   return (
     <>
       {/* Fixed nav — stays at the top as you scroll */}
-      <Nav />
+      <NavWrapper />
 
       {/* Main content — stacked sections, full width */}
       <main>
         {/* 1. Hero — full viewport, dark, immersive */}
-        <Hero />
+        <Hero settings={settings} />
 
-        {/* 2. Work — featured case studies */}
-        <Work />
+        {/* 2. Work — featured case studies from Sanity */}
+        <Work projects={featuredProjects} />
 
         {/* 3. About — short bio teaser + specializations */}
-        <About />
+        <About settings={settings} />
 
         {/* 4. Footer — contact CTA + links */}
-        <Footer />
+        <Footer settings={settings} />
       </main>
     </>
   )

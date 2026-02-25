@@ -4,17 +4,24 @@
 // Uses a tiny scroll listener to shift from transparent (over the dark hero)
 // to a frosted-glass white background once the user scrolls past the hero.
 // The transition is smooth via CSS — no jarring flashes.
+//
+// brandName comes from Sanity (via NavWrapper) so you can update it in the Studio.
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-export function Nav() {
+interface NavProps {
+  // Your name — shown as the nav "logo". Comes from Sanity Site Settings.
+  brandName: string
+}
+
+export function Nav({ brandName }: NavProps) {
   // Track whether the user has scrolled below the hero section
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      // Trigger the background change after scrolling ~100px
+      // Trigger the background change after scrolling ~80px
       setScrolled(window.scrollY > 80)
     }
 
@@ -44,16 +51,16 @@ export function Nav() {
           ${scrolled ? 'text-foreground' : 'text-white'}
         `}
       >
-        Curtis Calhoun
+        {brandName}
       </Link>
 
       {/* Right side: main navigation links */}
       <nav className="flex items-center gap-7">
         {[
-          { label: 'Work', href: '#work' },
-          { label: 'About', href: '#about' },
+          { label: 'Work',    href: '#work'    },
+          { label: 'About',   href: '#about'   },
           { label: 'Contact', href: '#contact' },
-          { label: 'Resume', href: '/resume' },
+          { label: 'Resume',  href: '/resume'  },
         ].map(({ label, href }) => (
           <Link
             key={label}

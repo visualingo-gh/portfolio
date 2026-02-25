@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { DM_Sans, DM_Serif_Display } from 'next/font/google'
 import { PasswordProvider } from '@/components/PasswordProvider'
+import { getCachedSiteSettings } from '@/sanity/queries'
 import './globals.css'
 
 // DM Sans — clean, modern sans-serif for body text and UI elements
@@ -32,15 +33,27 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Fetch site settings to get the current portfolio password from Sanity.
+  // This runs server-side — the password is never exposed in client-side JS bundles.
+  // React.cache() in getCachedSiteSettings deduplicates this request if
+  // other server components also need settings in the same render pass.
+  const settings = await getCachedSiteSettings()
+  const password = settings?.portfolioPassword ?? 'portfolio2024'
+
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerif.variable}`}>
-      {/* PasswordProvider wraps the whole app so any component can check lock state */}
-      <body><PasswordProvider>{children}</PasswordProvider></body>
+      {/* PasswordProvider wraps the whole app so any component can check lock state.
+          The password prop comes from Sanity — change it in the Studio any time. */}
+      <body>
+        <PasswordProvider password={password}>
+          {children}
+        </PasswordProvider>
+      </body>
     </html>
   )
 }

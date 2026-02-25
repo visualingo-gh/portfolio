@@ -7,9 +7,11 @@
 //
 // State is persisted in localStorage so visitors stay unlocked across page
 // refreshes and return visits.
+//
+// The password comes from Sanity (fetched in layout.tsx) — change it any time
+// at /studio → Site Settings → Portfolio Access.
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
-import { PORTFOLIO_PASSWORD } from '@/lib/config'
 
 // ── Types ────────────────────────────────────────────────────
 
@@ -37,7 +39,13 @@ export function usePassword() {
 
 const STORAGE_KEY = 'portfolio_unlocked'
 
-export function PasswordProvider({ children }: { children: React.ReactNode }) {
+interface PasswordProviderProps {
+  // The correct password — fetched from Sanity in layout.tsx and passed down here
+  password: string
+  children: React.ReactNode
+}
+
+export function PasswordProvider({ password, children }: PasswordProviderProps) {
   const [isUnlocked, setIsUnlocked] = useState(false)
 
   // On mount, check if the visitor has previously unlocked the site
@@ -47,14 +55,14 @@ export function PasswordProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   // Check the entered password and update state if correct
-  const unlock = useCallback((password: string): boolean => {
-    if (password === PORTFOLIO_PASSWORD) {
+  const unlock = useCallback((entered: string): boolean => {
+    if (entered === password) {
       setIsUnlocked(true)
       localStorage.setItem(STORAGE_KEY, 'true')
       return true
     }
     return false
-  }, [])
+  }, [password])
 
   return (
     <PasswordContext.Provider value={{ isUnlocked, unlock }}>

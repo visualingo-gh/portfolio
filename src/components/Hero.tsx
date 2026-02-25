@@ -1,28 +1,44 @@
 // Hero — Full-viewport opening section. The first thing visitors see.
 //
-// Currently uses a rich dark gradient as a placeholder.
-// TO ADD YOUR OWN IMAGE: replace the <div className="absolute inset-0 bg-gradient-to-br...">
-// with this:
+// All text content (name, title, tagline, status label) comes from Sanity.
+// Edit it at /studio → Site Settings → Hero Section.
 //
-//   import Image from 'next/image'
-//   <Image
-//     src="/images/your-hero-image.jpg"   ← put your image in /public/images/
-//     alt="Curtis Calhoun"
-//     fill
-//     priority
-//     className="object-cover object-center"
-//   />
-//
-// The overlay div beneath stays — it ensures your text stays readable
-// no matter how light or dark the photo is.
+// If you upload a heroImage in the Studio, it replaces the dark gradient.
+// The overlays ensure text stays readable over any photo.
 
-export function Hero() {
+import Image from 'next/image'
+import { urlFor } from '@/sanity/image'
+import type { SiteSettings } from '@/sanity/queries'
+
+interface HeroProps {
+  settings: SiteSettings | null
+}
+
+export function Hero({ settings }: HeroProps) {
+  // Fall back to sensible defaults if Sanity hasn't been seeded yet
+  const name        = settings?.brandName       ?? 'Curtis Calhoun'
+  const title       = settings?.heroTitle       ?? 'Senior Product Designer'
+  const tagline     = settings?.heroTagline     ?? 'Designing products people love.\nLeading teams that build them.'
+  const statusLabel = settings?.heroStatusLabel ?? 'Open to opportunities'
+  const heroImage   = settings?.heroImage
+
   return (
     <section className="relative min-h-screen flex flex-col">
 
       {/* ── Background ────────────────────────────────────── */}
-      {/* This is the placeholder. Swap it for an Image component (see above). */}
-      <div className="absolute inset-0 bg-gradient-to-br from-stone-950 via-stone-900 to-neutral-800" />
+      {heroImage ? (
+        // If a hero image is uploaded in the Studio, use it
+        <Image
+          src={urlFor(heroImage).width(1920).auto('format').url()}
+          alt={name}
+          fill
+          priority
+          className="object-cover object-center"
+        />
+      ) : (
+        // Default: dark gradient placeholder
+        <div className="absolute inset-0 bg-gradient-to-br from-stone-950 via-stone-900 to-neutral-800" />
+      )}
 
       {/* Subtle vignette overlay — darkens edges slightly for depth */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_40%,_rgba(0,0,0,0.5)_100%)]" />
@@ -34,11 +50,11 @@ export function Hero() {
       {/* Positioned in the lower-left for an editorial, design-forward feel */}
       <div className="relative z-10 flex flex-col justify-end flex-1 px-6 pb-16 md:px-16 md:pb-24 max-w-screen-xl mx-auto w-full">
 
-        {/* "Available for work" signal — subtle but valuable context for recruiters */}
+        {/* Availability status — subtle context for recruiters */}
         <div className="mb-8 animate-fade-in">
           <span className="inline-flex items-center gap-2 text-xs text-white/50 tracking-widest uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Open to opportunities
+            {statusLabel}
           </span>
         </div>
 
@@ -51,7 +67,7 @@ export function Hero() {
             mb-5 animate-fade-in
           "
         >
-          Curtis Calhoun
+          {name}
         </h1>
 
         {/* Divider line — separates name from descriptor, adds structure */}
@@ -60,12 +76,11 @@ export function Hero() {
         {/* Title + tagline — stacked, kept concise */}
         <div className="animate-fade-in-slow space-y-2">
           <p className="text-white/70 text-base md:text-lg font-medium tracking-wide uppercase text-sm">
-            Senior Product Designer
+            {title}
           </p>
-          <p className="text-white/60 text-base md:text-lg font-light max-w-xl leading-relaxed">
-            Designing products people love.
-            <br />
-            Leading teams that build them.
+          {/* whitespace-pre-line respects \n line breaks from the Sanity text field */}
+          <p className="text-white/60 text-base md:text-lg font-light max-w-xl leading-relaxed whitespace-pre-line">
+            {tagline}
           </p>
         </div>
 
@@ -101,7 +116,7 @@ export function Hero() {
       {/* A subtle editorial touch, like you see on read.cv */}
       <div className="absolute top-20 right-6 md:right-12 z-10">
         <p className="text-white/20 text-xs tracking-widest uppercase rotate-90 origin-right translate-y-4">
-          Portfolio 2024
+          Portfolio {new Date().getFullYear()}
         </p>
       </div>
     </section>

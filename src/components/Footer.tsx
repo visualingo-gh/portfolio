@@ -1,19 +1,35 @@
 // Footer — Contact section + site footer, combined.
 // Keeps it simple: a clear call to action, two or three links, and a copyright line.
-// Update the email and LinkedIn URL with your real ones.
+//
+// All content comes from Sanity — edit at /studio → Site Settings → Contact & Footer.
 
-export function Footer() {
-  // Contact links — update these with your real details
+import type { SiteSettings } from '@/sanity/queries'
+
+interface FooterProps {
+  settings: SiteSettings | null
+}
+
+export function Footer({ settings }: FooterProps) {
+  // Fall back to defaults if Sanity hasn't been seeded yet
+  const brandName         = settings?.brandName         ?? 'Curtis Calhoun'
+  const footerHeadline    = settings?.footerHeadline    ?? "Let's work together."
+  const footerDescription = settings?.footerDescription ?? 'Open to full-time roles, contract work, and design leadership opportunities. Reach out and let\'s start a conversation.'
+  const contactEmail      = settings?.contactEmail      ?? 'hello@curtiscalhoun.com'
+  const linkedInUrl       = settings?.linkedInUrl       ?? 'https://www.linkedin.com/in/curtiscalhoun'
+
+  // Build a clean display version of the LinkedIn URL (strips https://)
+  const linkedInDisplay = linkedInUrl.replace(/^https?:\/\//, '')
+
   const contactLinks = [
     {
-      label: 'Email',
-      href: 'mailto:hello@curtiscalhoun.com',  // ← update this
-      display: 'hello@curtiscalhoun.com',
+      label:   'Email',
+      href:    `mailto:${contactEmail}`,
+      display: contactEmail,
     },
     {
-      label: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/curtiscalhoun',  // ← update this
-      display: 'linkedin.com/in/curtiscalhoun',
+      label:   'LinkedIn',
+      href:    linkedInUrl,
+      display: linkedInDisplay,
     },
   ]
 
@@ -30,11 +46,10 @@ export function Footer() {
             Get in touch
           </p>
           <h2 className="font-serif text-4xl md:text-6xl text-foreground tracking-display leading-none mb-8">
-            Let&apos;s work together.
+            {footerHeadline}
           </h2>
           <p className="text-muted text-base md:text-lg max-w-md leading-relaxed">
-            Open to full-time roles, contract work, and design leadership
-            opportunities. Reach out and let&apos;s start a conversation.
+            {footerDescription}
           </p>
         </div>
 
@@ -50,11 +65,9 @@ export function Footer() {
                 transition-colors duration-250
               "
             >
-              {/* Icon label */}
               <span className="text-xs text-muted uppercase tracking-widest w-16 flex-shrink-0">
                 {label}
               </span>
-              {/* Link text */}
               <span className="text-sm border-b border-border group-hover:border-muted transition-colors duration-250 pb-0.5">
                 {display}
               </span>
@@ -65,7 +78,7 @@ export function Footer() {
         {/* Bottom bar — copyright and back-to-top */}
         <div className="flex items-center justify-between pt-8 border-t border-border">
           <p className="text-xs text-muted">
-            © {new Date().getFullYear()} Curtis Calhoun
+            © {new Date().getFullYear()} {brandName}
           </p>
           <a
             href="#"
