@@ -37,19 +37,19 @@ export function LockedCard({ href, children, className = '', protected: isProtec
   // Locked — blur the card contents and intercept clicks
   return (
     <>
-      {/* Outer wrapper — just a positioning context. No visual styling here so
-          it doesn't interfere with the card's own layout classes. */}
+      {/* Outer wrapper — carries all the card's visual styles (border, rounded corners,
+          overflow-hidden, background). The overflow-hidden here is what clips the blur
+          to the card boundary so it doesn't bleed outside. */}
       <div
-        className="relative cursor-pointer"
+        className={`relative cursor-pointer ${className}`}
         onClick={() => setModalOpen(true)}
         role="button"
         aria-label="View protected work — click to unlock"
       >
-        {/* Blurred card — className goes here, same as the unlocked Link above.
-            This means the flex direction, border, background, and rounded corners
-            all come from the parent, so layout is identical in locked and unlocked
-            states regardless of which page the card is on. */}
-        <div className={`blur-md select-none pointer-events-none ${className}`}>
+        {/* Inner blur wrapper — only wraps the content, not the card shell.
+            Because overflow-hidden on the outer element clips this, the blur
+            stops cleanly at the card edge instead of bleeding into adjacent cards. */}
+        <div className="blur-md select-none pointer-events-none">
           {children}
         </div>
 
