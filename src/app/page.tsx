@@ -2,6 +2,11 @@
 // Fetches content from Sanity and passes it down to each section as props.
 // Edit everything at curtiscalhoun.com/studio — no code changes needed.
 
+// ISR — re-fetch from Sanity in the background every 60 seconds.
+// This means Studio changes appear on the live site within ~1 minute
+// without needing a full redeploy.
+export const revalidate = 60
+
 import { NavWrapper } from '@/components/NavWrapper'
 import { Hero } from '@/components/Hero'
 import { Work } from '@/components/Work'

@@ -23,6 +23,9 @@ import {
   type SanityProject,
 } from '@/sanity/queries'
 
+// ISR — re-fetch from Sanity in the background every 60 seconds.
+export const revalidate = 60
+
 // Tell Next.js which slugs to pre-build as static pages at build time.
 // This runs once during the build — Sanity returns all project slugs.
 export async function generateStaticParams() {

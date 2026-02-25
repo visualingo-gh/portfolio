@@ -4,6 +4,9 @@
 // Projects are pulled from Sanity — add, edit, or reorder them at /studio.
 // Featured projects appear first, then the rest in chronological order.
 
+// ISR — re-fetch from Sanity in the background every 60 seconds.
+export const revalidate = 60
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { Metadata } from 'next'
