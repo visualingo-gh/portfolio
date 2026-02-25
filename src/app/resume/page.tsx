@@ -6,7 +6,7 @@
 
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { Nav } from '@/components/Nav'
+import { NavWrapper } from '@/components/NavWrapper'
 import { CONTACT_EMAIL } from '@/lib/config'
 
 export const metadata: Metadata = {
@@ -14,10 +14,10 @@ export const metadata: Metadata = {
   description: 'Resume of Curtis Calhoun, Senior Product Designer specializing in enterprise UX, streaming TV, and mobile.',
 }
 
-export default function ResumePage() {
+export default async function ResumePage() {
   return (
     <>
-      <Nav />
+      <NavWrapper />
 
       <main className="bg-background min-h-screen">
 
