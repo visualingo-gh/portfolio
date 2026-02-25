@@ -89,6 +89,15 @@ export const projectSchema = defineType({
     }),
 
     defineField({
+      name: 'protected',
+      title: 'Password Protected',
+      type: 'boolean',
+      group: 'basics',
+      description: 'When on, visitors must enter the portfolio password to view this project. Turn off to make it fully public.',
+      initialValue: true,
+    }),
+
+    defineField({
       name: 'role',
       title: 'Your Role',
       type: 'string',

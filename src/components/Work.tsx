@@ -62,6 +62,7 @@ function ProjectCard({
   return (
     <LockedCard
       href={`/work/${project.slug}`}
+      protected={project.protected ?? true}
       className="
         group flex flex-col md:flex-row gap-0 rounded-2xl overflow-hidden
         border border-border

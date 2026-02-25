@@ -41,6 +41,7 @@ export interface SanityProject {
   tags: string[]
   year: string
   featured: boolean
+  protected: boolean   // whether this project requires the portfolio password
   image?: SanityImage
   role?: string
   overview?: PortableTextContent
@@ -80,6 +81,7 @@ const PROJECT_FIELDS = `
   tags,
   year,
   featured,
+  protected,
   image { ..., "alt": alt },
   role,
   overview,

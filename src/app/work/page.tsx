@@ -77,6 +77,7 @@ function WorkCard({ project }: { project: SanityProject }) {
   return (
     <LockedCard
       href={`/work/${project.slug}`}
+      protected={project.protected ?? true}
       className="group flex flex-col rounded-2xl overflow-hidden border border-border hover:border-stone-300 bg-white transition-all duration-400"
     >
       {/* Image area */}

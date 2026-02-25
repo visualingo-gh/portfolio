@@ -12,12 +12,19 @@ import { useState } from 'react'
 import { usePassword } from '@/components/PasswordProvider'
 import { PasswordModal } from '@/components/PasswordModal'
 
-export function PasswordGate({ children }: { children: React.ReactNode }) {
+interface PasswordGateProps {
+  children: React.ReactNode
+  // When false, the gate is skipped entirely — content is public.
+  // Defaults to true so all case studies are protected unless turned off in Sanity.
+  enabled?: boolean
+}
+
+export function PasswordGate({ children, enabled = true }: PasswordGateProps) {
   const { isUnlocked } = usePassword()
   const [modalOpen, setModalOpen] = useState(false)
 
-  // Unlocked — show content as-is
-  if (isUnlocked) return <>{children}</>
+  // Not protected, or already unlocked — show content as-is
+  if (!enabled || isUnlocked) return <>{children}</>
 
   // Locked — blur the content and show a gate prompt
   return (

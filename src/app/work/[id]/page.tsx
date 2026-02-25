@@ -113,9 +113,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
 
         {/* ── Protected Content ────────────────────────────────── */}
         {/* PasswordGate blurs everything below when locked.       */}
-        {/* The dark header above stays visible so the page feels  */}
-        {/* anchored even before a visitor unlocks.                */}
-        <PasswordGate>
+        {/* If the project is not marked protected in Sanity,      */}
+        {/* the content is shown to everyone without a gate.       */}
+        <PasswordGate enabled={project.protected ?? true}>
 
           {/* ── Hero Image ─────────────────────────────────────── */}
           {project.image && (

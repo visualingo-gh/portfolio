@@ -16,14 +16,17 @@ interface LockedCardProps {
   href: string
   children: React.ReactNode
   className?: string
+  // When false, the card is always public regardless of the global unlock state.
+  // Defaults to true so existing cards stay protected unless explicitly turned off.
+  protected?: boolean
 }
 
-export function LockedCard({ href, children, className = '' }: LockedCardProps) {
+export function LockedCard({ href, children, className = '', protected: isProtected = true }: LockedCardProps) {
   const { isUnlocked } = usePassword()
   const [modalOpen, setModalOpen] = useState(false)
 
-  // Unlocked — render as a normal navigating link
-  if (isUnlocked) {
+  // Not protected, or already unlocked — render as a normal navigating link
+  if (!isProtected || isUnlocked) {
     return (
       <Link href={href} className={className}>
         {children}
