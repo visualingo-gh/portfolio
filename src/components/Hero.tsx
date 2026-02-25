@@ -36,8 +36,35 @@ export function Hero({ settings }: HeroProps) {
           className="object-cover object-center"
         />
       ) : (
-        // Default: dark gradient placeholder
-        <div className="absolute inset-0 bg-gradient-to-br from-stone-950 via-stone-900 to-neutral-800" />
+        // Default: animated dark background — three soft radial blobs that drift
+        // very slowly, giving the black hero a subtle, living quality.
+        // All colors are near-black stone tones so it stays restrained.
+        <div className="absolute inset-0 bg-[#0c0a09] overflow-hidden">
+          {/* Blob 1 — top-left, 28s cycle */}
+          <div
+            className="absolute top-[-30%] left-[-10%] w-[80%] h-[80%] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, #1c1917 0%, transparent 65%)',
+              animation: 'hero-drift-1 28s ease-in-out infinite',
+            }}
+          />
+          {/* Blob 2 — bottom-right, 35s cycle */}
+          <div
+            className="absolute bottom-[-30%] right-[-20%] w-[75%] h-[75%] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, #292524 0%, transparent 65%)',
+              animation: 'hero-drift-2 35s ease-in-out infinite',
+            }}
+          />
+          {/* Blob 3 — center-left, 22s cycle */}
+          <div
+            className="absolute top-[25%] left-[-15%] w-[55%] h-[55%] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, #161412 0%, transparent 70%)',
+              animation: 'hero-drift-3 22s ease-in-out infinite',
+            }}
+          />
+        </div>
       )}
 
       {/* Subtle vignette overlay — darkens edges slightly for depth */}
@@ -112,13 +139,7 @@ export function Hero({ settings }: HeroProps) {
         </div>
       </div>
 
-      {/* ── Year label — top-right corner detail ─────────── */}
-      {/* A subtle editorial touch, like you see on read.cv */}
-      <div className="absolute top-20 right-6 md:right-12 z-10">
-        <p className="text-white/20 text-xs tracking-widest uppercase rotate-90 origin-right translate-y-4">
-          Portfolio {new Date().getFullYear()}
-        </p>
-      </div>
+
     </section>
   )
 }

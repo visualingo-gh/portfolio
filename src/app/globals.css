@@ -51,6 +51,22 @@
   }
 }
 
+/* Hero background — three large radial gradient blobs that drift slowly.
+   Each blob uses a different duration so they never move in sync.
+   The effect is a subtle, living quality to an otherwise pure-black hero. */
+@keyframes hero-drift-1 {
+  0%, 100% { transform: translate(0%, 0%)   scale(1);    }
+  50%       { transform: translate(4%, 3%)   scale(1.08); }
+}
+@keyframes hero-drift-2 {
+  0%, 100% { transform: translate(0%, 0%)   scale(1);    }
+  50%       { transform: translate(-3%, -4%) scale(0.92); }
+}
+@keyframes hero-drift-3 {
+  0%, 100% { transform: translate(0%, 0%)   scale(1);    }
+  50%       { transform: translate(5%, -2%)  scale(1.05); }
+}
+
 /* Shake animation — used on incorrect password entry */
 @layer utilities {
   .animate-shake {
