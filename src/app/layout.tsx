@@ -1,3 +1,7 @@
+// ISR — re-fetch settings (including the portfolio password) every 60 seconds.
+// Without this, layout.tsx was locked to the password at build time.
+export const revalidate = 60
+
 import type { Metadata } from 'next'
 import { DM_Sans, DM_Serif_Display } from 'next/font/google'
 import { PasswordProvider } from '@/components/PasswordProvider'
@@ -43,7 +47,8 @@ export default async function RootLayout({
   // React.cache() in getCachedSiteSettings deduplicates this request if
   // other server components also need settings in the same render pass.
   const settings = await getCachedSiteSettings()
-  const password = settings?.portfolioPassword ?? 'portfolio2024'
+  // Use || instead of ?? so an empty string in Sanity also falls back to the default
+  const password = settings?.portfolioPassword || 'portfolio2024'
 
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerif.variable}`}>
